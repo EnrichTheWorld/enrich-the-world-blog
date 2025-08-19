@@ -8,7 +8,7 @@ const client = createClient({
 
 export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
-    const response = await client.getEntries<ContentfulResponse>({
+    const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
@@ -23,7 +23,7 @@ export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[
 
 export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost | null> {
   try {
-    const response = await client.getEntries<ContentfulResponse>({
+    const response = await client.getEntries({
       content_type: 'pageBlogPost',
       'fields.slug': slug,
       include: 2,
@@ -43,7 +43,7 @@ export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): P
 
 export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
-    const response = await client.getEntries<ContentfulResponse>({
+    const response = await client.getEntries({
       content_type: 'pageBlogPost',
       'fields.category.sys.contentType.sys.id': 'category',
       'fields.category.fields.slug': categorySlug,
@@ -60,7 +60,7 @@ export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'e
 
 export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
-    const response = await client.getEntries<ContentfulResponse>({
+    const response = await client.getEntries({
       content_type: 'pageBlogPost',
       'fields.tags[in]': tag,
       include: 2,
@@ -77,7 +77,7 @@ export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Pr
 export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     // Since your content model doesn't have a featured field, just return latest posts
-    const response = await client.getEntries<ContentfulResponse>({
+    const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
@@ -93,7 +93,7 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
 
 export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
-    const response = await client.getEntries<ContentfulResponse>({
+    const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
