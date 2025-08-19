@@ -80,8 +80,10 @@ export const navLink = style({
     transition: `width ${vars.transition.fast}`,
   },
   
-  ':hover::after': {
-    width: '100%',
+  selectors: {
+    '&:hover::after': {
+      width: '100%',
+    },
   },
 });
 
