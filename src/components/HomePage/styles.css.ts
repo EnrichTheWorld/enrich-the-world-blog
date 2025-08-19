@@ -99,18 +99,14 @@ export const featuredGrid = style({
       gap: vars.spacing[12],
     },
     'screen and (min-width: 1024px)': {
-      gridTemplateColumns: '2fr 1fr 1fr',
-      gridTemplateRows: 'repeat(2, 1fr)',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: vars.spacing[8],
     },
   },
 });
 
 export const featuredMain = style({
-  '@media': {
-    'screen and (min-width: 1024px)': {
-      gridRow: 'span 2',
-    },
-  },
+  // Remove special styling for first post to make all posts equal size
 });
 
 export const postCard = style({

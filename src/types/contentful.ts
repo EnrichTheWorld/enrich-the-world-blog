@@ -65,7 +65,7 @@ export interface BlogPost {
   id: string;
   title: string;
   slug: string;
-  excerpt?: string;
+  excerpt?: string; // Will use shortDescription from Contentful
   content: Document;
   featuredImage?: string | null;
   author?: Author | null;
@@ -82,54 +82,38 @@ export interface BlogPost {
 export interface ContentfulBlogPost {
   sys: ContentfulSys;
   fields: {
+    internalName: string;
     title: string;
     slug: string;
-    excerpt?: string;
+    shortDescription?: string; // This is your subtitle field
     content: Document;
     featuredImage?: ContentfulAsset;
     author?: {
       sys: { id: string };
       fields: {
+        internalName: string;
         name: string;
-        bio?: string;
         avatar?: ContentfulAsset;
-        social?: {
-          twitter?: string;
-          linkedin?: string;
-          github?: string;
-          website?: string;
-        };
       };
     };
-    category?: {
+    publishedDate?: string;
+    seoFields?: {
       sys: { id: string };
-      fields: {
-        name: string;
-        slug: string;
-        description?: string;
-        color?: string;
-      };
+      fields: any; // SEO component fields
     };
-    tags?: string[];
-    featured?: boolean;
-    published?: boolean;
-    readingTime?: number;
-    publishedAt?: string;
+    relatedBlogPosts?: Array<{
+      sys: { id: string };
+      fields: any;
+    }>;
   };
 }
 
 export interface ContentfulAuthor {
   sys: ContentfulSys;
   fields: {
+    internalName: string;
     name: string;
-    bio?: string;
     avatar?: ContentfulAsset;
-    social?: {
-      twitter?: string;
-      linkedin?: string;
-      github?: string;
-      website?: string;
-    };
   };
 }
 

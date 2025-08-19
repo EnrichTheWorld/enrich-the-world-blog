@@ -9,8 +9,7 @@ const client = createClient({
 export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries<ContentfulResponse>({
-      content_type: 'blogPost',
-      locale,
+      content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
     });
@@ -25,9 +24,8 @@ export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[
 export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost | null> {
   try {
     const response = await client.getEntries<ContentfulResponse>({
-      content_type: 'blogPost',
+      content_type: 'pageBlogPost',
       'fields.slug': slug,
-      locale,
       include: 2,
       limit: 1,
     });
@@ -46,10 +44,9 @@ export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): P
 export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries<ContentfulResponse>({
-      content_type: 'blogPost',
+      content_type: 'pageBlogPost',
       'fields.category.sys.contentType.sys.id': 'category',
       'fields.category.fields.slug': categorySlug,
-      locale,
       include: 2,
       order: ['-sys.createdAt'],
     });
@@ -64,9 +61,8 @@ export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'e
 export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries<ContentfulResponse>({
-      content_type: 'blogPost',
+      content_type: 'pageBlogPost',
       'fields.tags[in]': tag,
-      locale,
       include: 2,
       order: ['-sys.createdAt'],
     });
@@ -80,10 +76,9 @@ export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Pr
 
 export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
+    // Since your content model doesn't have a featured field, just return latest posts
     const response = await client.getEntries<ContentfulResponse>({
-      content_type: 'blogPost',
-      'fields.featured': true,
-      locale,
+      content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
       limit,
@@ -99,8 +94,7 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
 export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries<ContentfulResponse>({
-      content_type: 'blogPost',
-      locale,
+      content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
       limit,
@@ -115,21 +109,9 @@ export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'k
 
 export async function getAllCategories(locale: 'ko' | 'en' = 'ko'): Promise<Category[]> {
   try {
-    const response = await client.getEntries({
-      content_type: 'category',
-      locale,
-      order: ['fields.name'],
-    });
-
-    return response.items.map((item: any) => ({
-      id: item.sys.id,
-      name: item.fields.name,
-      slug: item.fields.slug,
-      description: item.fields.description,
-      color: item.fields.color,
-      createdAt: item.sys.createdAt,
-      updatedAt: item.sys.updatedAt,
-    }));
+    // Your Contentful space doesn't have a category content type, return empty array
+    console.log('Categories not available in this Contentful space');
+    return [];
   } catch (error) {
     console.error('Error fetching categories:', error);
     return [];
@@ -139,17 +121,19 @@ export async function getAllCategories(locale: 'ko' | 'en' = 'ko'): Promise<Cate
 export async function getAllAuthors(locale: 'ko' | 'en' = 'ko'): Promise<Author[]> {
   try {
     const response = await client.getEntries({
-      content_type: 'author',
-      locale,
+      content_type: 'componentAuthor',
       order: ['fields.name'],
     });
 
     return response.items.map((item: any) => ({
       id: item.sys.id,
       name: item.fields.name,
-      bio: item.fields.bio,
-      avatar: item.fields.avatar?.fields?.file?.url || null,
-      social: item.fields.social || {},
+      bio: '', // No bio field in your author structure
+      avatar: item.fields.avatar?.fields?.file?.url ? 
+        (item.fields.avatar.fields.file.url.startsWith('//') ? 
+          `https:${item.fields.avatar.fields.file.url}` : 
+          item.fields.avatar.fields.file.url) : null,
+      social: {}, // No social fields in your author structure
       createdAt: item.sys.createdAt,
       updatedAt: item.sys.updatedAt,
     }));
@@ -164,32 +148,30 @@ function transformPost(item: any): BlogPost {
     id: item.sys.id,
     title: item.fields.title,
     slug: item.fields.slug,
-    excerpt: item.fields.excerpt,
+    excerpt: item.fields.shortDescription, // Using your shortDescription field
     content: item.fields.content,
-    featuredImage: item.fields.featuredImage?.fields?.file?.url || null,
+    featuredImage: item.fields.featuredImage?.fields?.file?.url ? 
+      (item.fields.featuredImage.fields.file.url.startsWith('//') ? 
+        `https:${item.fields.featuredImage.fields.file.url}` : 
+        item.fields.featuredImage.fields.file.url) : null,
     author: item.fields.author ? {
       id: item.fields.author.sys.id,
       name: item.fields.author.fields.name,
-      bio: item.fields.author.fields.bio,
-      avatar: item.fields.author.fields.avatar?.fields?.file?.url || null,
-      social: item.fields.author.fields.social || {},
+      bio: '', // No bio field in your author structure
+      avatar: item.fields.author.fields.avatar?.fields?.file?.url ? 
+        (item.fields.author.fields.avatar.fields.file.url.startsWith('//') ? 
+          `https:${item.fields.author.fields.avatar.fields.file.url}` : 
+          item.fields.author.fields.avatar.fields.file.url) : null,
+      social: {}, // No social fields in your author structure
       createdAt: item.fields.author.sys.createdAt,
       updatedAt: item.fields.author.sys.updatedAt,
     } : null,
-    category: item.fields.category ? {
-      id: item.fields.category.sys.id,
-      name: item.fields.category.fields.name,
-      slug: item.fields.category.fields.slug,
-      description: item.fields.category.fields.description,
-      color: item.fields.category.fields.color,
-      createdAt: item.fields.category.sys.createdAt,
-      updatedAt: item.fields.category.sys.updatedAt,
-    } : null,
-    tags: item.fields.tags || [],
-    featured: item.fields.featured || false,
-    published: item.fields.published || false,
-    readingTime: item.fields.readingTime || 0,
-    publishedAt: item.fields.publishedAt || item.sys.createdAt,
+    category: null, // No category in your current structure
+    tags: [], // No tags in your current structure
+    featured: false, // No featured field in your current structure
+    published: true, // Assume published if it exists
+    readingTime: calculateReadingTime(item.fields.content?.content?.[0]?.content?.[0]?.value || ''),
+    publishedAt: item.fields.publishedDate || item.sys.createdAt,
     createdAt: item.sys.createdAt,
     updatedAt: item.sys.updatedAt,
   };
