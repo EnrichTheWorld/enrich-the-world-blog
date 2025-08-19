@@ -241,7 +241,7 @@ export const categoryCard = style({
   
   selectors: {
     '[data-theme="dark"] &:hover': {
-      backgroundColor: vars.color.primary[950],
+      backgroundColor: vars.color.primary[900],
       borderColor: vars.color.primary[700],
     },
   },
