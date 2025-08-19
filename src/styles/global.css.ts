@@ -232,9 +232,11 @@ globalStyle(':focus-visible', {
 });
 
 // Print styles
-globalStyle('@media print', {
-  '*': {
-    color: '#000 !important',
-    backgroundColor: '#fff !important',
+globalStyle('*', {
+  '@media': {
+    'print': {
+      color: '#000 !important',
+      backgroundColor: '#fff !important',
+    },
   },
 });
