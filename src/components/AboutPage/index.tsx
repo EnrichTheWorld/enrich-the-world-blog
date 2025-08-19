@@ -65,7 +65,7 @@ export function AboutPage({ authors, locale }: AboutPageProps) {
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <div style={{ display: 'grid', gap: '4rem', gridTemplateColumns: '1fr', '@media': { 'screen and (min-width: 768px)': { gridTemplateColumns: 'repeat(2, 1fr)' } } }}>
+          <div className={styles.grid}>
             <div>
               <h2 className={styles.sectionTitle}>{pageContent.mission.title}</h2>
               <p style={{ fontSize: '1.125rem', lineHeight: '1.75', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
