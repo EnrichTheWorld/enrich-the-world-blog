@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getPostBySlug, getLatestPosts } from '@/lib/contentful';
 import { generateMetadata as generateSEOMetadata } from '@/lib/metadata';
-import * as styles from '../../[slug]/styles.css';
+import * as styles from '../../../blog/[slug]/styles.css';
 
 interface PostPageProps {
   params: {
