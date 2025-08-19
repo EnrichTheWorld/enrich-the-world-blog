@@ -58,8 +58,8 @@ export async function generateMetadata({ params }: PostPageProps) {
   return generateSEOMetadata({
     title: post.title,
     description: post.excerpt || `Read ${post.title} on our blog`,
-    ogImage: post.featuredImage || undefined,
-    canonicalUrl: `/blog/${post.slug}`,
+    image: post.featuredImage || undefined,
+    url: `/blog/${post.slug}`,
   });
 }
 
