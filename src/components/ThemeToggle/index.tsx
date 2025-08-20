@@ -9,19 +9,42 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Get saved theme or system preference
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
     
+    // Apply theme immediately
+    applyTheme(initialTheme);
     setTheme(initialTheme);
-    document.documentElement.setAttribute('data-theme', initialTheme);
   }, []);
+
+  const applyTheme = (newTheme: 'light' | 'dark') => {
+    // Remove any existing theme classes/attributes
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.classList.remove('light', 'dark');
+    
+    // Apply new theme
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.classList.add(newTheme);
+    
+    // Force a style recalculation
+    document.documentElement.style.colorScheme = newTheme;
+  };
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
+    
+    // Apply theme immediately
+    applyTheme(newTheme);
+    
+    // Update state and storage
     setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
+    
+    // Trigger a custom event for other components to listen to
+    window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme: newTheme } }));
   };
 
   if (!mounted) {

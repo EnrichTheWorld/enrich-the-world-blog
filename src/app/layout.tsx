@@ -58,6 +58,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var initialTheme = theme || (prefersDark ? 'dark' : 'light');
+                  
+                  document.documentElement.setAttribute('data-theme', initialTheme);
+                  document.documentElement.classList.add(initialTheme);
+                  document.documentElement.style.colorScheme = initialTheme;
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body>
         <LayoutProvider>{children}</LayoutProvider>
       </body>

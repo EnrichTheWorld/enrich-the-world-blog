@@ -1,5 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
 import { vars } from './theme.css';
+import './darkMode.css';
 
 globalStyle('*, *::before, *::after', {
   boxSizing: 'border-box',
