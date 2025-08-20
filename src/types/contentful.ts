@@ -77,6 +77,7 @@ export interface BlogPost {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+  locale: 'ko' | 'en';
 }
 
 export interface ContentfulBlogPost {

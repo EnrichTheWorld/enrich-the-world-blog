@@ -3,8 +3,10 @@ import type { BlogPost, Author, Category, ContentfulResponse } from '@/types/con
 
 function getContentfulClient() {
   return createClient({
-    space: (process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id').replace(/[\r\n\s]+$/g, ''),
-    accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token').replace(/[\r\n\s]+$/g, ''),
+    space: (process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id').replace(/[
+\s]+$/g, ''),
+    accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token').replace(/[
+\s]+$/g, ''),
   });
 }
 
@@ -18,7 +20,7 @@ export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[
       locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
-    return response.items.map(transformPost);
+    return response.items.map(item => transformPost(item, locale));
   } catch (error) {
     console.error('Error fetching posts:', error);
     return [];
@@ -40,7 +42,7 @@ export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): P
       return null;
     }
 
-    return transformPost(response.items[0]);
+    return transformPost(response.items[0], locale);
   } catch (error) {
     console.error('Error fetching post:', error);
     return null;
@@ -57,7 +59,7 @@ export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'e
       locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
-    return response.items.map(transformPost);
+    return response.items.map(item => transformPost(item, locale));
   } catch (error) {
     console.error('Error fetching posts by category:', error);
     return [];
@@ -74,7 +76,7 @@ export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Pr
       locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
-    return response.items.map(transformPost);
+    return response.items.map(item => transformPost(item, locale));
   } catch (error) {
     console.error('Error fetching posts by tag:', error);
     return [];
@@ -93,7 +95,7 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
       locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
-    return response.items.map(transformPost);
+    return response.items.map(item => transformPost(item, locale));
   } catch (error) {
     console.error('Error fetching featured posts:', error);
     return [];
@@ -111,7 +113,7 @@ export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'k
       locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
-    return response.items.map(transformPost);
+    return response.items.map(item => transformPost(item, locale));
   } catch (error) {
     console.error('Error fetching latest posts:', error);
     return [];
@@ -139,7 +141,7 @@ export async function getAllAuthors(locale: 'ko' | 'en' = 'ko'): Promise<Author[
   }
 }
 
-function transformPost(item: any): BlogPost {
+function transformPost(item: any, locale: 'ko' | 'en'): BlogPost {
   // Extract author information from the componentAuthor reference
   const authorData = item.fields.author?.fields || {};
   
@@ -180,6 +182,7 @@ function transformPost(item: any): BlogPost {
     publishedAt: item.fields.publishedDate || item.sys.createdAt,
     createdAt: item.sys.createdAt,
     updatedAt: item.sys.updatedAt,
+    locale: locale,
   };
 }
 
