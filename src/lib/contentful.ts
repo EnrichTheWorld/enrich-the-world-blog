@@ -15,7 +15,7 @@ export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
-      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
+      locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -33,7 +33,7 @@ export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): P
       'fields.slug': slug,
       include: 2,
       limit: 1,
-      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
+      locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
     if (response.items.length === 0) {
@@ -54,7 +54,7 @@ export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'e
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
-      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
+      locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -71,7 +71,7 @@ export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Pr
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
-      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
+      locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -90,7 +90,7 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
       include: 2,
       order: ['-sys.createdAt'],
       limit,
-      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
+      locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -108,7 +108,7 @@ export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'k
       include: 2,
       order: ['-sys.createdAt'],
       limit,
-      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
+      locale: locale === 'ko' ? 'ko' : 'en-US',
     });
 
     return response.items.map(transformPost);
