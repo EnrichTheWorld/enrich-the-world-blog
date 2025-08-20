@@ -20,20 +20,57 @@ export async function GET() {
       accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
     });
 
-    // Test fetching entries
-    const response = await client.getEntries({
-      content_type: 'pageBlogPost',
-      limit: 3,
-    });
+    // First, get the content types to see what's available
+    const contentTypes = await client.getContentTypes();
+    
+    console.log('Available content types:', contentTypes.items.map(ct => ({ id: ct.sys.id, name: ct.name })));
+
+    // Test fetching entries - try to find a blog post content type
+    let response;
+    try {
+      response = await client.getEntries({
+        content_type: 'pageBlogPost',
+        limit: 3,
+      });
+    } catch (error) {
+      console.log('pageBlogPost not found, trying other content types...');
+      // If pageBlogPost doesn't exist, try common blog post content type names
+      const possibleTypes = ['blogPost', 'post', 'article', 'blog'];
+      let foundType = null;
+      
+      for (const type of possibleTypes) {
+        try {
+          const typeExists = contentTypes.items.find(ct => ct.sys.id === type);
+          if (typeExists) {
+            response = await client.getEntries({
+              content_type: type,
+              limit: 3,
+            });
+            foundType = type;
+            break;
+          }
+        } catch (e) {
+          console.log(`Content type ${type} not found`);
+        }
+      }
+      
+      if (!foundType) {
+        // Just get all entries without specifying content type
+        response = await client.getEntries({ limit: 3 });
+      }
+    }
 
     return NextResponse.json({
       success: true,
+      contentTypes: contentTypes.items.map(ct => ({ id: ct.sys.id, name: ct.name })),
       postsFound: response.items.length,
       totalPosts: response.total,
       posts: response.items.map(item => ({
         id: item.sys.id,
-        title: item.fields.title,
-        slug: item.fields.slug,
+        title: item.fields.title || 'No title',
+        slug: item.fields.slug || 'no-slug',
+        contentType: item.sys.contentType.sys.id,
+        fields: Object.keys(item.fields),
       }))
     });
 

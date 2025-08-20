@@ -30,22 +30,13 @@ export const languageToggle = style({
     '[data-theme="dark"] &': {
       backgroundColor: vars.color.neutral[800],
       borderColor: vars.color.neutral[700],
+      color: vars.color.text.secondary,
     },
     '[data-theme="dark"] &:hover': {
       backgroundColor: vars.color.neutral[700],
       borderColor: vars.color.neutral[600],
+      color: vars.color.text.primary,
     },
   },
 });
 
-export const flag = style({
-  width: '20px',
-  height: '15px',
-  borderRadius: vars.borderRadius.sm,
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: vars.color.neutral[200],
-  fontSize: '12px',
-});

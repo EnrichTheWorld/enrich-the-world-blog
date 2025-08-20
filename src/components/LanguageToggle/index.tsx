@@ -32,9 +32,6 @@ export function LanguageToggle() {
       aria-label={`Switch to ${currentLocale === 'en' ? '한국어' : 'English'}`}
       type="button"
     >
-      <span className={styles.flag}>
-        {currentLocale === 'en' ? '🇺🇸' : '🇰🇷'}
-      </span>
       <span>{currentLocale === 'en' ? 'English' : '한국어'}</span>
     </button>
   );

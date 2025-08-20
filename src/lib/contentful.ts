@@ -9,7 +9,7 @@ const client = createClient({
 export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries({
-      content_type: 'pageBlogPost',
+      content_type: 'blogPost',
       include: 2,
       order: ['-sys.createdAt'],
     });
@@ -24,7 +24,7 @@ export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[
 export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost | null> {
   try {
     const response = await client.getEntries({
-      content_type: 'pageBlogPost',
+      content_type: 'blogPost',
       'fields.slug': slug,
       include: 2,
       limit: 1,
@@ -44,9 +44,7 @@ export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): P
 export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries({
-      content_type: 'pageBlogPost',
-      'fields.category.sys.contentType.sys.id': 'category',
-      'fields.category.fields.slug': categorySlug,
+      content_type: 'blogPost',
       include: 2,
       order: ['-sys.createdAt'],
     });
@@ -61,8 +59,7 @@ export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'e
 export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries({
-      content_type: 'pageBlogPost',
-      'fields.tags[in]': tag,
+      content_type: 'blogPost',
       include: 2,
       order: ['-sys.createdAt'],
     });
@@ -78,7 +75,7 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
   try {
     // Since your content model doesn't have a featured field, just return latest posts
     const response = await client.getEntries({
-      content_type: 'pageBlogPost',
+      content_type: 'blogPost',
       include: 2,
       order: ['-sys.createdAt'],
       limit,
@@ -94,7 +91,7 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
 export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     const response = await client.getEntries({
-      content_type: 'pageBlogPost',
+      content_type: 'blogPost',
       include: 2,
       order: ['-sys.createdAt'],
       limit,
@@ -120,23 +117,8 @@ export async function getAllCategories(locale: 'ko' | 'en' = 'ko'): Promise<Cate
 
 export async function getAllAuthors(locale: 'ko' | 'en' = 'ko'): Promise<Author[]> {
   try {
-    const response = await client.getEntries({
-      content_type: 'componentAuthor',
-      order: ['fields.name'],
-    });
-
-    return response.items.map((item: any) => ({
-      id: item.sys.id,
-      name: item.fields.name,
-      bio: '', // No bio field in your author structure
-      avatar: item.fields.avatar?.fields?.file?.url ? 
-        (item.fields.avatar.fields.file.url.startsWith('//') ? 
-          `https:${item.fields.avatar.fields.file.url}` : 
-          item.fields.avatar.fields.file.url) : null,
-      social: {}, // No social fields in your author structure
-      createdAt: item.sys.createdAt,
-      updatedAt: item.sys.updatedAt,
-    }));
+    // No separate author content type, return empty array
+    return [];
   } catch (error) {
     console.error('Error fetching authors:', error);
     return [];
@@ -146,31 +128,28 @@ export async function getAllAuthors(locale: 'ko' | 'en' = 'ko'): Promise<Author[
 function transformPost(item: any): BlogPost {
   return {
     id: item.sys.id,
-    title: item.fields.title,
-    slug: item.fields.slug,
-    excerpt: item.fields.shortDescription, // Using your shortDescription field
+    title: item.fields.title || 'Untitled',
+    slug: item.fields.slug || item.sys.id,
+    excerpt: item.fields.excerpt || 'No description available',
     content: item.fields.content,
     featuredImage: item.fields.featuredImage?.fields?.file?.url ? 
       (item.fields.featuredImage.fields.file.url.startsWith('//') ? 
         `https:${item.fields.featuredImage.fields.file.url}` : 
         item.fields.featuredImage.fields.file.url) : null,
-    author: item.fields.author ? {
-      id: item.fields.author.sys.id,
-      name: item.fields.author.fields.name,
-      bio: '', // No bio field in your author structure
-      avatar: item.fields.author.fields.avatar?.fields?.file?.url ? 
-        (item.fields.author.fields.avatar.fields.file.url.startsWith('//') ? 
-          `https:${item.fields.author.fields.avatar.fields.file.url}` : 
-          item.fields.author.fields.avatar.fields.file.url) : null,
-      social: {}, // No social fields in your author structure
-      createdAt: item.fields.author.sys.createdAt,
-      updatedAt: item.fields.author.sys.updatedAt,
-    } : null,
-    category: null, // No category in your current structure
-    tags: [], // No tags in your current structure
-    featured: false, // No featured field in your current structure
-    published: true, // Assume published if it exists
-    readingTime: calculateReadingTime(item.fields.content?.content?.[0]?.content?.[0]?.value || ''),
+    author: {
+      id: 'default-author',
+      name: 'Anonymous',
+      bio: '',
+      avatar: null,
+      social: {},
+      createdAt: item.sys.createdAt,
+      updatedAt: item.sys.updatedAt,
+    },
+    category: null,
+    tags: [],
+    featured: item.fields.isFeatured || false,
+    published: true,
+    readingTime: item.fields.readingTime || calculateReadingTime(item.fields.content?.content?.[0]?.content?.[0]?.value || ''),
     publishedAt: item.fields.publishedDate || item.sys.createdAt,
     createdAt: item.sys.createdAt,
     updatedAt: item.sys.updatedAt,
