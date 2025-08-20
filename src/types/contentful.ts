@@ -87,19 +87,27 @@ export interface ContentfulBlogPost {
     slug: string;
     shortDescription?: string; // This is your subtitle field
     content: Document;
-    featuredImage?: ContentfulAsset;
+    featuredImage: ContentfulAsset;
     author?: {
-      sys: { id: string };
+      sys: { id: string; createdAt: string; updatedAt: string };
       fields: {
         internalName: string;
         name: string;
         avatar?: ContentfulAsset;
       };
     };
-    publishedDate?: string;
+    publishedDate: string;
     seoFields?: {
       sys: { id: string };
-      fields: any; // SEO component fields
+      fields: {
+        internalName: string;
+        pageTitle: string;
+        pageDescription?: string;
+        canonicalUrl?: string;
+        nofollow: boolean;
+        noindex: boolean;
+        shareImages?: ContentfulAsset[];
+      };
     };
     relatedBlogPosts?: Array<{
       sys: { id: string };
