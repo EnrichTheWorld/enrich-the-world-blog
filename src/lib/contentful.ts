@@ -3,10 +3,8 @@ import type { BlogPost, Author, Category, ContentfulResponse } from '@/types/con
 
 function getContentfulClient() {
   return createClient({
-    space: (process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id').replace(/[
-\s]+$/g, ''),
-    accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token').replace(/[
-\s]+$/g, ''),
+    space: (process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id').replace(/[\r\n\s]+$/g, ''),
+    accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token').replace(/[\r\n\s]+$/g, ''),
   });
 }
 
