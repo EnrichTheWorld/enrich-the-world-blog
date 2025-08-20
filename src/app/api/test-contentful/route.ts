@@ -63,15 +63,15 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       contentTypes: contentTypes.items.map(ct => ({ id: ct.sys.id, name: ct.name })),
-      postsFound: response.items.length,
-      totalPosts: response.total,
-      posts: response.items.map(item => ({
+      postsFound: response?.items?.length || 0,
+      totalPosts: response?.total || 0,
+      posts: response?.items?.map(item => ({
         id: item.sys.id,
         title: item.fields.title || 'No title',
         slug: item.fields.slug || 'no-slug',
         contentType: item.sys.contentType.sys.id,
         fields: Object.keys(item.fields),
-      }))
+      })) || []
     });
 
   } catch (error: any) {
