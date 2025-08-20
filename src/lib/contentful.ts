@@ -2,9 +2,18 @@ import { createClient } from 'contentful';
 import type { BlogPost, Author, Category, ContentfulResponse } from '@/types/contentful';
 
 function getContentfulClient() {
+  const space = process.env.CONTENTFUL_SPACE_ID;
+  const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
+
+  if (!space || !accessToken || space === 'placeholder_space_id' || accessToken === 'placeholder_access_token') {
+    throw new Error('Contentful space ID and access token must be provided in environment variables.');
+  }
+
   return createClient({
-    space: (process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id').replace(/[\r\n\s]+$/g, ''),
-    accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token').replace(/[\r\n\s]+$/g, ''),
+    space: space.replace(/[
+\s]+$/g, ''),
+    accessToken: accessToken.replace(/[
+\s]+$/g, ''),
   });
 }
 
