@@ -47,7 +47,11 @@ const richTextOptions = {
 };
 
 export async function generateMetadata({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug);
+  // Try both locales for the post
+  let post = await getPostBySlug(params.slug, 'en');
+  if (!post) {
+    post = await getPostBySlug(params.slug, 'ko');
+  }
   
   if (!post) {
     return {
@@ -64,10 +68,13 @@ export async function generateMetadata({ params }: PostPageProps) {
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const [post, relatedPosts] = await Promise.all([
-    getPostBySlug(params.slug),
-    getLatestPosts(3),
-  ]);
+  // Try both locales for the post
+  let post = await getPostBySlug(params.slug, 'en');
+  if (!post) {
+    post = await getPostBySlug(params.slug, 'ko');
+  }
+
+  const relatedPosts = await getLatestPosts(3, post ? (post.locale || 'en') : 'en');
 
   if (!post) {
     notFound();

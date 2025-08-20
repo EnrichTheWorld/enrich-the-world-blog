@@ -29,7 +29,7 @@ export function HomePage({ featuredPosts, latestPosts, categories, locale }: Hom
     const excerpt = post.excerpt || documentToPlainTextString(post.content).slice(0, 150) + '...';
     
     return (
-      <Link href={`${baseUrl}/blog/${post.slug}`} className={`${styles.postCard} ${featured ? styles.featuredMain : ''}`}>
+      <Link href={`${baseUrl}/blog/${post.slug}`} className={`${styles.postCard} ${featured ? styles.featuredMain : ''}`} data-blog-card>
         {post.featuredImage && (
           <Image
             src={post.featuredImage}
@@ -117,7 +117,7 @@ export function HomePage({ featuredPosts, latestPosts, categories, locale }: Hom
             <h2 className={styles.sectionTitle}>{dict.blog.categories}</h2>
             <div className={styles.categoriesGrid}>
               {categories.slice(0, 6).map((category) => (
-                <Link key={category.id} href={`${baseUrl}/blog/category/${category.slug}`} className={styles.categoryCard}>
+                <Link key={category.id} href={`${baseUrl}/blog/category/${category.slug}`} className={styles.categoryCard} data-card>
                   <h3 className={styles.categoryName}>{category.name}</h3>
                   {category.description && (
                     <p className={styles.categoryDescription}>{category.description}</p>

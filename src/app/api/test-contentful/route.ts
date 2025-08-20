@@ -16,8 +16,8 @@ export async function GET() {
     }
 
     const client = createClient({
-      space: process.env.CONTENTFUL_SPACE_ID,
-      accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      space: (process.env.CONTENTFUL_SPACE_ID || '').replace(/[\r\n\s]+$/g, ''),
+      accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || '').replace(/[\r\n\s]+$/g, ''),
     });
 
     // First, get the content types to see what's available
@@ -31,6 +31,7 @@ export async function GET() {
       response = await client.getEntries({
         content_type: 'pageBlogPost',
         limit: 3,
+        locale: 'ko-KR',
       });
     } catch (error) {
       console.log('pageBlogPost not found, trying other content types...');

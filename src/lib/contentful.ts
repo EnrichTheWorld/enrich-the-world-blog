@@ -1,17 +1,21 @@
 import { createClient } from 'contentful';
 import type { BlogPost, Author, Category, ContentfulResponse } from '@/types/contentful';
 
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id',
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token',
-});
+function getContentfulClient() {
+  return createClient({
+    space: (process.env.CONTENTFUL_SPACE_ID || 'placeholder_space_id').replace(/[\r\n\s]+$/g, ''),
+    accessToken: (process.env.CONTENTFUL_ACCESS_TOKEN || 'placeholder_access_token').replace(/[\r\n\s]+$/g, ''),
+  });
+}
 
 export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
+    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
+      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -23,11 +27,13 @@ export async function getAllPosts(locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[
 
 export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost | null> {
   try {
+    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'pageBlogPost',
       'fields.slug': slug,
       include: 2,
       limit: 1,
+      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
     });
 
     if (response.items.length === 0) {
@@ -43,10 +49,12 @@ export async function getPostBySlug(slug: string, locale: 'ko' | 'en' = 'ko'): P
 
 export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
+    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
+      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -58,10 +66,12 @@ export async function getPostsByCategory(categorySlug: string, locale: 'ko' | 'e
 
 export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
+    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
+      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -74,11 +84,13 @@ export async function getPostsByTag(tag: string, locale: 'ko' | 'en' = 'ko'): Pr
 export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
     // Since your content model doesn't have a featured field, just return latest posts
+    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
       limit,
+      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
     });
 
     return response.items.map(transformPost);
@@ -90,11 +102,13 @@ export async function getFeaturedPosts(limit: number = 3, locale: 'ko' | 'en' = 
 
 export async function getLatestPosts(limit: number = 5, locale: 'ko' | 'en' = 'ko'): Promise<BlogPost[]> {
   try {
+    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'pageBlogPost',
       include: 2,
       order: ['-sys.createdAt'],
       limit,
+      locale: locale === 'ko' ? 'ko-KR' : 'en-US',
     });
 
     return response.items.map(transformPost);

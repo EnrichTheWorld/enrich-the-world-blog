@@ -16,6 +16,7 @@ globalStyle('html, body', {
   transition: `background-color ${vars.transition.base}, color ${vars.transition.base}`,
   fontSize: vars.fontSize.base,
   lineHeight: vars.lineHeight.normal,
+  scrollBehavior: 'smooth',
 });
 
 globalStyle('#__next', {
@@ -241,3 +242,62 @@ globalStyle('*', {
     },
   },
 });
+
+// Enhanced transitions for interactive elements
+globalStyle('button, a, input, textarea, select', {
+  transition: `all ${vars.transition.fast}`,
+});
+
+// Enhanced card hover effects
+globalStyle('[data-card]', {
+  transition: `all ${vars.transition.base}`,
+});
+
+globalStyle('[data-card]:hover', {
+  transform: 'translateY(-4px)',
+  boxShadow: vars.shadow.lg,
+});
+
+// Blog post card enhancements
+globalStyle('[data-blog-card]', {
+  transition: `all ${vars.transition.base}`,
+  transform: 'translateY(0)',
+});
+
+globalStyle('[data-blog-card]:hover', {
+  transform: 'translateY(-8px)',
+  boxShadow: vars.shadow.xl,
+});
+
+globalStyle('[data-blog-card] img', {
+  transition: `transform ${vars.transition.slow}`,
+});
+
+globalStyle('[data-blog-card]:hover img', {
+  transform: 'scale(1.05)',
+});
+
+// Theme toggle enhancements
+globalStyle('[data-theme-toggle]', {
+  transition: `all ${vars.transition.base}`,
+});
+
+globalStyle('[data-theme-toggle]:hover', {
+  transform: 'rotate(180deg) scale(1.1)',
+});
+
+// Language toggle enhancements
+globalStyle('[data-language-toggle] span', {
+  transition: `all ${vars.transition.fast}`,
+  position: 'relative',
+});
+
+globalStyle('[data-language-toggle]:hover span', {
+  transform: 'scale(1.05)',
+});
+
+// Smooth image transitions
+globalStyle('img', {
+  transition: `opacity ${vars.transition.base}, transform ${vars.transition.base}`,
+});
+

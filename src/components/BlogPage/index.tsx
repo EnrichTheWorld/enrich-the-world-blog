@@ -28,7 +28,7 @@ export function BlogPage({ posts, categories, locale }: BlogPageProps) {
     const excerpt = post.excerpt || documentToPlainTextString(post.content).slice(0, 150) + '...';
     
     return (
-      <Link href={`${baseUrl}/blog/${post.slug}`} className={styles.postCard}>
+      <Link href={`${baseUrl}/blog/${post.slug}`} className={styles.postCard} data-blog-card>
         {post.featuredImage && (
           <Image
             src={post.featuredImage}
@@ -77,7 +77,7 @@ export function BlogPage({ posts, categories, locale }: BlogPageProps) {
             <h2 className={styles.sectionTitle}>{dict.blog.categories}</h2>
             <div className={styles.categoriesGrid}>
               {categories.map((category) => (
-                <Link key={category.id} href={`${baseUrl}/blog/category/${category.slug}`} className={styles.categoryCard}>
+                <Link key={category.id} href={`${baseUrl}/blog/category/${category.slug}`} className={styles.categoryCard} data-card>
                   <h3 className={styles.categoryName}>{category.name}</h3>
                   {category.description && (
                     <p className={styles.categoryDescription}>{category.description}</p>

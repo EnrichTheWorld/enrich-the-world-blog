@@ -17,9 +17,11 @@ export function LanguageToggle() {
   const toggleLanguage = () => {
     if (currentLocale === 'en') {
       // Switch to Korean: add /kr prefix
+      setCurrentLocale('ko');
       router.push(`/kr${pathname}`);
     } else {
-      // Switch to English: remove /kr prefix
+      // Switch to English: remove /kr prefix  
+      setCurrentLocale('en');
       const newPath = pathname.replace('/kr', '') || '/';
       router.push(newPath);
     }
@@ -31,6 +33,7 @@ export function LanguageToggle() {
       onClick={toggleLanguage}
       aria-label={`Switch to ${currentLocale === 'en' ? '한국어' : 'English'}`}
       type="button"
+      data-language-toggle
     >
       <span>{currentLocale === 'en' ? 'English' : '한국어'}</span>
     </button>

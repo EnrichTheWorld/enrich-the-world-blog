@@ -11,13 +11,21 @@ export const themeToggle = style({
   backgroundColor: vars.color.surface,
   border: `1px solid ${vars.color.border}`,
   cursor: 'pointer',
-  transition: `all ${vars.transition.fast}`,
+  transition: `all ${vars.transition.base}`,
   color: vars.color.text.secondary,
+  position: 'relative',
+  overflow: 'hidden',
   
   ':hover': {
     backgroundColor: vars.color.neutral[100],
     borderColor: vars.color.neutral[300],
     color: vars.color.text.primary,
+    transform: 'scale(1.05)',
+    boxShadow: vars.shadow.sm,
+  },
+  
+  ':active': {
+    transform: 'scale(0.95)',
   },
   
   ':focus': {
@@ -25,16 +33,6 @@ export const themeToggle = style({
     outlineOffset: '2px',
   },
   
-  selectors: {
-    '[data-theme="dark"] &': {
-      backgroundColor: vars.color.neutral[800],
-      borderColor: vars.color.neutral[700],
-    },
-    '[data-theme="dark"] &:hover': {
-      backgroundColor: vars.color.neutral[700],
-      borderColor: vars.color.neutral[600],
-    },
-  },
 });
 
 export const icon = style({

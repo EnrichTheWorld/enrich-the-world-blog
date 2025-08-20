@@ -57,6 +57,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       type="button"
+      data-theme-toggle
     >
       {theme === 'light' ? (
         <svg className={styles.icon} fill="currentColor" viewBox="0 0 20 20">
