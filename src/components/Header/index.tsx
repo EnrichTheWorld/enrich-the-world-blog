@@ -21,6 +21,7 @@ export function Header({ locale = 'ko' }: HeaderProps) {
   const navigation = [
     { href: `${baseUrl}/`, label: isKorean ? '홈' : 'Home' },
     { href: `${baseUrl}/blog`, label: isKorean ? '블로그' : 'Blog' },
+    { href: `${baseUrl}/quiz`, label: isKorean ? '퀴즈' : 'Quiz' },
     { href: `${baseUrl}/about`, label: isKorean ? '소개' : 'About' },
   ];
 
