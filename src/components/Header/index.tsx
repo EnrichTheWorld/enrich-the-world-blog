@@ -22,6 +22,8 @@ export function Header({ locale = 'ko' }: HeaderProps) {
     { href: `${baseUrl}/`, label: isKorean ? '홈' : 'Home' },
     { href: `${baseUrl}/blog`, label: isKorean ? '블로그' : 'Blog' },
     { href: `${baseUrl}/quiz`, label: isKorean ? '퀴즈' : 'Quiz' },
+    { href: `${baseUrl}/game`, label: isKorean ? '게임' : 'Game' },
+    { href: `${baseUrl}/action`, label: isKorean ? '기후행동' : 'Climate Action' },
     { href: `${baseUrl}/about`, label: isKorean ? '소개' : 'About' },
   ];
 
