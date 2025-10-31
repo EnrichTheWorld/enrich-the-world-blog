@@ -1,5 +1,5 @@
 import { getFeaturedPosts, getLatestPosts, getAllCategories } from '@/lib/contentful';
-import { HomePage } from '@/components/HomePage';
+import { LandingPage } from '@/components/HomePage/LandingPage';
 
 export default async function Home() {
   const [featuredPosts, latestPosts, categories] = await Promise.all([
@@ -9,7 +9,7 @@ export default async function Home() {
   ]);
 
   return (
-    <HomePage
+    <LandingPage
       featuredPosts={featuredPosts}
       latestPosts={latestPosts}
       categories={categories}
